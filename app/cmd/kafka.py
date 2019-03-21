@@ -60,7 +60,9 @@ class TopicsCommand():
         pass
 
     def list_topic(self):
-        pass
+        cmd = '/root/kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181'
+        _, stdout = self._exec_cmd(cmd)
+        return stdout
 
 class AclsCommand():
     def __init__(self):
