@@ -20,4 +20,5 @@ class User(Resource):
         args = parser.parse_args()
         LOG.info('[request] username={username}'.format(username = args['username']))
         LOG.info('[request] password={password}'.format(password = args['password']))
-        kafka_configs.create_user(args['username'], args['password'])
+        response = kafka_configs.create_user(args['username'], args['password'])
+        return response

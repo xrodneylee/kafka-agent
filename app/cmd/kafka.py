@@ -48,7 +48,7 @@ class TopicsCommand():
     def _exec_cmd(self, cmd):
         cmd = ['/root/kafka/bin/kafka-topics.sh'] + cmd
         LOG.info('[Command] {cmd}'.format(cmd = cmd))
-        p = Popen(cmd)
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         stdout, stderr =  p.communicate()
         if p.returncode != 0:
             LOG.error('[kafka-topics] failed')
@@ -68,7 +68,7 @@ class AclsCommand():
 
     def _exec_cmd(self, cmd):
         cmd = ['/root/kafka/bin/kafka-acls.sh'] + cmd
-        p = Popen(cmd)
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         stdout, stderr =  p.communicate()
         if p.returncode != 0:
             LOG.error('[kafka-acls] failed')
@@ -79,9 +79,11 @@ class AclsCommand():
     def create_producer_acl(self, username, topic):
         user = 'User:{username}'.format(username = username)
         cmd = '--authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal {user} --producer --topic {topic}'.format(user = user, topic = topic)
-        self._exec_cmd(cmd)
+        _, stdout = self._exec_cmd(cmd)
+        return stdout
 
     def create_consumer_acl(self, username, topic):
         user = 'User:{username}'.format(username = username)
         cmd = '--authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal {user} --consumer --group=* --topic {topic}'.format(user = user, topic = topic)
-        self._exec_cmd(cmd)
+        _, stdout = self._exec_cmd(cmd)
+        return stdout
