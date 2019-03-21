@@ -10,7 +10,11 @@ parser.add_argument('password', required=True, type=str, help='password cannot b
 class User(Resource):
 
     def get(self, username=None):
-        return {"response": "test"}
+        if username:
+            response = kafka_configs.get_user(username)
+        else:
+            response = kafka_configs.list_user()
+        return response
 
     def post(self):
         args = parser.parse_args()

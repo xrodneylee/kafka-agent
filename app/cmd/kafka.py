@@ -1,4 +1,4 @@
-import subprocess
+from subprocess import Popen, PIPE
 from app.utils import LOG
 
 class ConfigsCommand():
@@ -6,27 +6,32 @@ class ConfigsCommand():
         pass
 
     def _exec_cmd(self, cmd):
-        cmd = ['/root/kafka/bin/kafka-configs.sh'] + cmd
-        p = subprocess.Popen(cmd)
+        cmd = '/root/kafka/bin/kafka-configs.sh {cmd}'.format(cmd = cmd)
+        LOG.info('[Command] {cmd}'.format(cmd = cmd))
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         stdout, stderr =  p.communicate()
         if p.returncode != 0:
-            LOG.error('[kafka-configs] {stdout}'.format(stdout = stdout))
+            LOG.error('[kafka-configs] failed')
             LOG.error('[kafka-configs] {stderr}'.format(stderr = stderr))
         return (p.returncode, stdout)
 
     def create_user(self, username, password):
         pwd = "'SCRAM-SHA-256=[password={password}],SCRAM-SHA-512=[password={password}]'".format(password = password) 
-        cmd = ['--zookeeper', 'localhost:2181', '--alter', '--add-config', pwd, '--entity-type', 'users', '--entity-name', username]
-        returncode, stdout = self._exec_cmd(cmd)
-        LOG.info('[kafka-configs] returncode={returncode}'.format(returncode = returncode))
+        cmd = "--zookeeper localhost:2181 --alter --add-config {pwd} --entity-type users --entity-name {username}".format(pwd = pwd, username = username)
+        _, stdout = self._exec_cmd(cmd)
         LOG.info('[kafka-configs] stdout={stdout}'.format(stdout = stdout))
 
     def get_user(self, username):
-        cmd = ['--zookeeper', 'localhost:2181', '--describe', '--entity-type', 'users', '--entity-name', username]
-        self._exec_cmd(cmd)
+        cmd = '--zookeeper localhost:2181 --describe --entity-type users --entity-name {username}'.format(username = username)
+        _, stdout = self._exec_cmd(cmd)
+        LOG.info('[kafka-configs] stdout={stdout}'.format(stdout = stdout))
+        return ''
     
     def list_user(self):
-        pass
+        cmd = '--zookeeper localhost:2181 --describe --entity-type users'
+        _, stdout = self._exec_cmd(cmd)
+        LOG.info('[kafka-configs] stdout={stdout}'.format(stdout = stdout))
+        return ''
     
     def delete_user(self):
         pass
@@ -40,6 +45,7 @@ class TopicsCommand():
     
     def _exec_cmd(self, cmd):
         cmd = ['/root/kafka/bin/kafka-topics.sh'] + cmd
+        LOG.info('[Command] {cmd}'.format(cmd = cmd))
         p = subprocess.Popen(cmd)
         stdout, stderr =  p.communicate()
         if p.returncode != 0:
