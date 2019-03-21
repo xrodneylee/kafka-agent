@@ -46,7 +46,7 @@ class TopicsCommand():
         pass
     
     def _exec_cmd(self, cmd):
-        cmd = ['/root/kafka/bin/kafka-topics.sh'] + cmd
+        cmd = '/root/kafka/bin/kafka-topics.sh {cmd}'.format(cmd = cmd)
         LOG.info('[Command] {cmd}'.format(cmd = cmd))
         p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         stdout, stderr =  p.communicate()
@@ -67,7 +67,7 @@ class AclsCommand():
         pass
 
     def _exec_cmd(self, cmd):
-        cmd = ['/root/kafka/bin/kafka-acls.sh'] + cmd
+        cmd = '/root/kafka/bin/kafka-acls.sh {cmd}'.format(cmd = cmd)
         p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
         stdout, stderr =  p.communicate()
         if p.returncode != 0:
