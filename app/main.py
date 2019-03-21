@@ -5,7 +5,7 @@ from app.resource.credential import User
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(User, '/users')
+api.add_resource(User, '/users', '/users/<username>')
 
 @app.after_request
 def after_request(response):
