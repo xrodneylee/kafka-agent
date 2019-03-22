@@ -9,7 +9,7 @@ api = Api(app)
 
 api.add_resource(User, '/users', '/users/<username>')
 api.add_resource(ACL, '/acls')
-api.add_resource(Topic, '/topics')
+api.add_resource(Topic, '/topics', '/topics/<topic>')
 
 @app.after_request
 def after_request(response):

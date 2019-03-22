@@ -13,7 +13,6 @@ class ConfigsCommand():
         if p.returncode != 0:
             LOG.error('[kafka-configs] failed')
             LOG.error('[kafka-configs] {stderr}'.format(stderr = stderr))
-            LOG.error('[kafka-configs] {stdout}'.format(stdout = stdout))
         return (p.returncode, stdout)
 
     def create_user(self, username, password):
@@ -66,6 +65,12 @@ class TopicsCommand():
         cmd = '/root/kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181'
         _, stdout = self._exec_cmd(cmd)
         LOG.info('[list_topic] {stdout}'.format(stdout = stdout))
+        return stdout
+    
+    def get_topic(self, topic):
+        cmd = '/root/kafka/bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic {topic}'.format(topic = topic)
+        _, stdout = self._exec_cmd(cmd)
+        LOG.info('[get_topic] {stdout}'.format(stdout = stdout))
         return stdout
 
 class AclsCommand():

@@ -11,8 +11,11 @@ parser.add_argument('partitions', required=True, type=str, help='partitions cann
 
 class Topic(Resource):
 
-    def get(self):
-        response = kafka_topics.list_topic()
+    def get(self, topic=None):
+        if topic:
+            response = kafka_topics.get_topic(topic)      
+        else:
+            response = kafka_topics.list_topic()
         return response
 
     def post(self):
