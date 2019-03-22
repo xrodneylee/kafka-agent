@@ -1,0 +1,11 @@
+[Unit]
+Description=Kafka agent service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/kafka-agent/kafka-agent-start.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
