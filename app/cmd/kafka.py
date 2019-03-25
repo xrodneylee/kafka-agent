@@ -56,21 +56,27 @@ class TopicsCommand():
         return (p.returncode, stdout)
 
     def create_topic(self, topic_name, replication_factor, partitions):
-        cmd = '/root/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor {replication_factor} --partitions {partitions} --topic {topic_name}'.format(topic_name = topic_name, replication_factor = replication_factor, partitions = partitions)
+        cmd = '--create --zookeeper localhost:2181 --replication-factor {replication_factor} --partitions {partitions} --topic {topic_name}'.format(topic_name = topic_name, replication_factor = replication_factor, partitions = partitions)
         _, stdout = self._exec_cmd(cmd)
         LOG.info('[create_topic] {stdout}'.format(stdout = stdout))
         return stdout
 
     def list_topic(self):
-        cmd = '/root/kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181'
+        cmd = '--list --zookeeper localhost:2181'
         _, stdout = self._exec_cmd(cmd)
         LOG.info('[list_topic] {stdout}'.format(stdout = stdout))
         return stdout
     
     def get_topic(self, topic):
-        cmd = '/root/kafka/bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic {topic}'.format(topic = topic)
+        cmd = '--describe --zookeeper localhost:2181 --topic {topic}'.format(topic = topic)
         _, stdout = self._exec_cmd(cmd)
         LOG.info('[get_topic] {stdout}'.format(stdout = stdout))
+        return stdout
+
+    def delete_topic(self, topic):
+        cmd = '--delete --zookeeper localhost:2181 --topic {topic}'.format(topic = topic)
+        _, stdout = self._exec_cmd(cmd)
+        LOG.info('[delete_topic] {stdout}'.format(stdout = stdout))
         return stdout
 
 class AclsCommand():

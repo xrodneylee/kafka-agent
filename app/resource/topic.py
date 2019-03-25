@@ -25,3 +25,7 @@ class Topic(Resource):
         LOG.info('[request] partitions={partitions}'.format(partitions = args['partitions']))
         response = kafka_topics.create_topic(args['topic'], args['replication'], args['partitions'])
         return response
+
+    def delete(self, topic):
+        response = kafka_topics.delete_topic(topic)      
+        return response
